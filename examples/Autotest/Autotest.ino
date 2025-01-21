@@ -15,7 +15,7 @@ MUX myMUX;
         Serial.print(i,HEX);
         Serial.print("     with PINB:");
         Serial.print(i,HEX);
-        Serial.print("     RESULT:   ");U9NYHHYBBG8Y8TBG
+        Serial.print("     RESULT:   ");
         if(myMUX.test(i,i ))
         {
           Serial.println("Buenolino");
