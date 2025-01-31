@@ -5,10 +5,12 @@
 
 #include <Arduino.h>
 #include <Adafruit_PCF8574.h>
+
+// pendiente: automatizar esta parte para que quede como los otros códigos
+// este código es, por ahora, todo manual.
+
 //creación de cada parte A y B en cada placa M
 //hay 4 placas: M0, M1, M2 y M3
-
-
 Adafruit_PCF8574 IO_M0_A;
 Adafruit_PCF8574 IO_M0_B;
 
