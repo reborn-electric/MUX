@@ -26,19 +26,19 @@ bool MUX::set_adress_A(uint16_t addr)
 {
   uint8_t addr_uint8_t = JAKast(addr);
 
-  if (addr < 0x100)
+  if (addr < 0x100) //valor máximo posible 0FF -- indica que estamos en M0
   {
     return (IO_A0.digitalWriteByte(addr_uint8_t));
   }
-  else if (addr < 0x200)
+  else if (addr < 0x200) //valor máximo posible 1FF - indica que estamos en M1
   {
     return (IO_A1.digitalWriteByte(addr_uint8_t));
   }
-  else if (addr < 0x300)
+  else if (addr < 0x300) //valor máximo posible 2FF - indica que estamos en M2
   {
     return (IO_A2.digitalWriteByte(addr_uint8_t));
   }
-  else if (addr < 0x400)
+  else if (addr < 0x400) //valor máximo posible 3FF - indica que estamos en M3
   {
     return (IO_A3.digitalWriteByte(addr_uint8_t));
   }

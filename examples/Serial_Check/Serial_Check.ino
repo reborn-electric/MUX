@@ -1,11 +1,11 @@
 #include <MUX.h>
-
+// Este es un "example" disponible para correr en IDE de Arduino
+// Desde Visual Studio marca error en #include <MUX.h> pero en IDE funciona perfecto 
 
 String inputString = "";         // a String to hold incoming data
 bool stringComplete = false;  // whether the string is complete
 
 void setup() {
-  // initialize serial:
   Serial.begin(9600);
   // reserve 200 bytes for the inputString:
   inputString.reserve(200);

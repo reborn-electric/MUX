@@ -1,0 +1,123 @@
+//-------[TESTING MASTER - Tester de Ramales V2]-------//
+//------------[SECONDARY CHANNEL TESTING]-------------//
+// Testeo controlado Canal a Canal en segunda etapa
+// Usuario debe ingresar instrucción para cambiar de canal
+
+#include <Arduino.h>
+#include <Adafruit_PCF8574.h>
+//creación de cada parte A y B en cada placa M
+//hay 4 placas: M0, M1, M2 y M3
+
+
+Adafruit_PCF8574 IO_M0_A;
+Adafruit_PCF8574 IO_M0_B;
+
+Adafruit_PCF8574 IO_M1_A;
+Adafruit_PCF8574 IO_M1_B;
+
+//Adafruit_PCF8574 IO_M2_A;
+//Adafruit_PCF8574 IO_M2_B;
+
+//Adafruit_PCF8574 IO_M3_A;
+//Adafruit_PCF8574 IO_M3_B;
+
+
+//-------Creación de los CHAN_XX------//
+// los números son los pines del arduino asociados a cada CHAN de cada placa
+
+int CHAN_0B = 9; 
+int CHAN_0A = 8; 
+
+int CHAN_1B = 7;
+int CHAN_1A = 6;
+
+//int CHAN_2B = 5;
+//int CHAN_2A = 4;
+
+//int CHAN_3B = 3;
+//int CHAN_3A = 2;
+
+
+
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println("Adafruit PCF8574 LED blink test");
+  
+  //----------[Inicias el IO B]------------
+  //IO B en M0 está en address 0x24
+  if (!IO_M0_B.begin(0x24, &Wire)) { // 
+    Serial.println("Couldn't find PCF8574");
+    while (1);
+  }
+  //Establecer como salida los 8 pines del IO_B
+  for (int i = 0; i < 8 ; i ++ ){
+    IO_M0_B.pinMode(i, OUTPUT); 
+  }
+  //Establece como salida el CHAN_0B del Arduino para la parte B de la placa M0 
+  pinMode(CHAN_0B,OUTPUT); 
+  Serial.println("IO B inicializado correctamente");
+
+  //----------[Inicias el IO A]------------
+  //IO A en M0 está en address 0x20
+  if (!IO_M0_A.begin(0x20, &Wire)) {
+    Serial.println("Couldn't find PCF8574");
+    while (1);
+  }
+  //Establecer como salida los 8 pines del IO_A para la parte B de la placa M0 
+  for (int i = 0; i < 8 ; i ++ ){
+    IO_M0_A.pinMode(i, OUTPUT);
+  }
+  //Establece como salida el CHAN_0A del Arduino
+  pinMode(CHAN_0A,OUTPUT);
+  Serial.println("IO A inicializado correctamente");
+
+
+}
+
+
+void loop() {
+  //Para la parte B del canal elegido en M0 
+  //------ Cambiar para seleccionar segunda etapa ------//
+  // CH15 --- 1011
+  IO_M0_B.digitalWrite(0, HIGH);  
+  IO_M0_B.digitalWrite(1, HIGH); 
+  IO_M0_B.digitalWrite(2, HIGH); 
+  IO_M0_B.digitalWrite(3, HIGH);
+  //------Selector de canal de primera etapa ------// 
+  //--[CH2----0010] 
+  IO_M0_B.digitalWrite(4, LOW); //LSB
+  IO_M0_B.digitalWrite(5, HIGH); 
+  IO_M0_B.digitalWrite(6, LOW); 
+  IO_M0_B.digitalWrite(7, LOW); //MSB 
+  
+  //Para la parte A del canal elegido en M0 
+  //------ Cambiar para seleccionar segunda etapa ------//
+  // CH11 --- 1011
+  IO_M0_A.digitalWrite(0, HIGH);  
+  IO_M0_A.digitalWrite(1, HIGH); 
+  IO_M0_A.digitalWrite(2, LOW); 
+  IO_M0_A.digitalWrite(3, HIGH);
+  //------Selector de canal de primera etapa ------// 
+  //--[CH5----0101] 
+  IO_M0_A.digitalWrite(4, HIGH); //LSB
+  IO_M0_A.digitalWrite(5, LOW); 
+  IO_M0_A.digitalWrite(6, HIGH); 
+  IO_M0_A.digitalWrite(7, LOW); //MSB 
+
+
+  
+  while(true){
+    digitalWrite(CHAN_0B,HIGH);
+    digitalWrite(CHAN_0A,HIGH);
+    delay(3000);
+    digitalWrite(CHAN_0B,LOW);
+    digitalWrite(CHAN_0A,LOW);
+    delay(3000);
+    
+    
+
+
+    //Serial.println("switcheando para testear"); 
+  }
+}

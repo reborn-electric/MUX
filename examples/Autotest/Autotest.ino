@@ -1,5 +1,6 @@
 #include <MUX.h>
-
+// Este es un "example" disponible para correr en IDE de Arduino
+// Desde Visual Studio marca error en #include <MUX.h> pero en IDE funciona perfecto 
 
 void setup() {
  Serial.begin(9600);
