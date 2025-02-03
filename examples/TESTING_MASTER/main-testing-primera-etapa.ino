@@ -3,6 +3,11 @@
 //---Testeo interactivo de Canales en primera etapa---//
 //----------------------------------------------------//
 
+// despues de intentar juntarlo en un archivo principal y llamar a otros archivos externos
+// no me funcionó. 
+// pensando en volver a usar el platform io 
+// por mientras este queda inutilizado y se actualizan los testing_auto y manual a lo que eran antes.
+
 //------Librerías------//
 #include <Arduino.h>
 // #include <Adafruit_PCF8574.h> está en los otros archivos
