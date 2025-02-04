@@ -231,6 +231,8 @@ void MUX::HiZ_B(void)
 
 bool MUX::test(uint16_t addr_A, uint16_t addr_B)
 {
+  HiZ_A();
+  HiZ_B();
   write_A(addr_A);
   delay(10);
   return (read_B(addr_B));

@@ -9,7 +9,7 @@ void setup() {
 
 void loop() {
 MUX myMUX;
-  for (uint16_t i = 0x000; i < 0x300; i++) 
+  for (uint16_t i = 0x0000; i < 0x0400; i++) 
   {
      //for (uint16_t j = 0; j < 1024; j++) {
         Serial.print("Testing PIN_A: ");

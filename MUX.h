@@ -63,8 +63,7 @@ private:
     Adafruit_PCF8574 IO_A3; //IO_EXP_A en M3
     Adafruit_PCF8574 IO_B3; //IO_EXP_B en M3
 
-    bool set_adress_A(uint16_t addr);
-    bool set_adress_B(uint16_t addr);
+    
     bool read_A(uint16_t addr);
     bool read_B(uint16_t addr);
     bool write_A(uint16_t addr);
@@ -76,6 +75,9 @@ private:
     
     
 public:
+    bool set_adress_A(uint16_t addr);
+    bool set_adress_B(uint16_t addr);
+    
     MUX(void);
     //~MUX();
     bool test(uint16_t addr_A, uint16_t addr_B); //método "test"
