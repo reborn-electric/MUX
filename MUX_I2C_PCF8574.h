@@ -2,17 +2,28 @@
 #include "Arduino.h"
 #include <Wire.h>
 
-#define MUX_CHAN_1 23
-#define MUX_CHAN_2 25
-#define MUX_CHAN_3 27
-#define MUX_CHAN_4 29
-#define MUX_CHAN_5 31
-#define MUX_CHAN_6 33
-#define MUX_CHAN_7 35
-#define MUX_CHAN_8 37
+
+#define MUX_CHAN_0A 8  //CHAN_0A
+#define MUX_CHAN_0B 9  //CHAN_0B
+#define MUX_CHAN_1A 6  //CHAN_1A
+#define MUX_CHAN_1B 7  //CHAN_1B
+#define MUX_CHAN_2A 4  //CHAN_2A
+#define MUX_CHAN_2B 5  //CHAN_2B
+#define MUX_CHAN_3A 2  //CHAN_3A
+#define MUX_CHAN_3B 3  //CHAN_3B
+
+// cambiar a IO_PX para 0-7
+#define MUX_addr_0A 0x20 
+#define MUX_addr_0B 0X24
+#define MUX_addr_1A 0X21
+#define MUX_addr_1B 0X25
+#define MUX_addr_2A 0X22
+#define MUX_addr_2B 0X26
+#define MUX_addr_3A 0X23
+#define MUX_addr_3B 0X27
+
 
 #define DEBUG 1 
-
 #if DEBUG==1
 #define debug(x) Serial.print(x)
 #define debugHEX(x) Serial.print(x,HEX)
@@ -51,8 +62,8 @@ class PCF8574 {
 
   };
 
-class I2C_MUX_CARD{
 
+class I2C_MUX_CARD{
   private:
 
   // bool ONLINE_A;
@@ -83,16 +94,14 @@ class I2C_MUX_CARD{
 };
 
 class I2C_MUX_SYSYEM {
-
   // private:
 
-  
-
   public:
-  I2C_MUX_CARD CARD1;
-  I2C_MUX_CARD CARD2;
-  I2C_MUX_CARD CARD3;
-  I2C_MUX_CARD CARD4;
+  I2C_MUX_CARD CARD_M0; //M0
+  I2C_MUX_CARD CARD2; //M1
+  I2C_MUX_CARD CARD3; //M2
+  I2C_MUX_CARD CARD4; //M3
+
   I2C_MUX_SYSYEM();
   bool read(unsigned int PIN);
   void write(int PIN, bool state);

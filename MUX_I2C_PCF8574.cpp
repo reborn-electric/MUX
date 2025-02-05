@@ -3,12 +3,18 @@
 /// @brief esto hace tal y cual cosa 
 /// @param  estas son sus variables 
 /// @return puntero a elemento clase weaita grenuina
+
+//-------------------------------//
+//-------- [IO-EXPANDER] --------//
+//-------------------------------//
 PCF8574::PCF8574(void) {}
 void PCF8574::set_address(int ADDR) {
+
   debugln("set_address");
   address = ADDR;
   // debugln("set_address done!");
 }
+
 int PCF8574::begin(void) {
   debugln("begin");
   Wire.beginTransmission(address);
@@ -28,6 +34,7 @@ int PCF8574::write(int myByte) {
   reg = myByte;
   return result;
 }
+
 int PCF8574::read(void) {
   int result = Wire.requestFrom(address, 1);
   if (result == 0) return -1;
@@ -39,28 +46,37 @@ int PCF8574::combinationToAddress(int A2_A1_A0, bool version_A) {
   if (version_A) return 0x38 + A2_A1_A0;
   return 0x20 + A2_A1_A0;
 }
+
 int PCF8574::getReg(void) {
   return reg;
 }
+
 void PCF8574::pinMode(int pin, bool mode) {
   if (mode != OUTPUT) digitalWrite(pin, HIGH);
 }
+
 int PCF8574::digitalWrite(int pin, bool value) {
   int result = write(value ? reg | (1 << pin) : reg & ~(1 << pin));
   return result;
 }
+
 int PCF8574::digitalWriteByte(int value) {
   int result = write(value);
   return result;
 }
+
 bool PCF8574::digitalRead(int pin) {
   return (read() & (1 << pin)) ? HIGH : LOW;
 }
+
 int PCF8574::digitalToggle(int pin) {
   int result = write(reg ^ (1 << pin));
   return result;
 }
 
+//-------------------------------//
+//--------- [PLACAS MX] ---------//
+//-------------------------------//
 I2C_MUX_CARD::I2C_MUX_CARD() {}
 
 I2C_MUX_CARD::I2C_MUX_CARD(int ADDR_A, int ADDR_B, int PIN_A, int PIN_B) {
@@ -73,7 +89,7 @@ I2C_MUX_CARD::I2C_MUX_CARD(int ADDR_A, int ADDR_B, int PIN_A, int PIN_B) {
   // debugln("Address  B setted ");
 
   
-  if (IO_EXPANDER_A.begin() == 0) {
+  if (IO_EXPANDER_A.begin() == 0) { 
   //delay(50);
   debugln("\tEXPANDER A ONLINE");}
   //  else {
@@ -98,20 +114,24 @@ void I2C_MUX_CARD::write(int PIN, bool state) {
   pinMode(CHAN_A, OUTPUT);
   digitalWrite(CHAN_A, state);
 }
+
 void I2C_MUX_CARD::restore_pin(void) {
   pinMode(CHAN_A, INPUT_PULLUP);
 }
+
 bool I2C_MUX_CARD::read(int PIN) {
   IO_EXPANDER_B.digitalWriteByte(PIN);
   //delay(10);
   return (digitalRead(CHAN_B));
 }
+
 bool I2C_MUX_CARD::is_conected(int PIN_A, int PIN_B) {
   write(PIN_A, LOW);
   bool buff = read(PIN_B);
   restore_pin();
   return (!buff);
 }
+
 int I2C_MUX_CARD::check_signal(int PIN) {
 bool detected = 0;
 bool correcto = 0;
@@ -152,24 +172,28 @@ bool I2C_MUX_CARD::check_card(void) {
 }
 
 
+//--------------------------------------//
+//--------- [SISTEMA COMPLETO] ---------//
+//--------------------------------------//
 
 I2C_MUX_SYSYEM::I2C_MUX_SYSYEM() {
 
+  // MUX_CHAN_0A ---> CHAN_0A
 
   debugln("LOADING CARD1");
-  CARD1 = I2C_MUX_CARD(0x20, 0x21, MUX_CHAN_1, MUX_CHAN_2);
+  CARD_M0 = I2C_MUX_CARD(MUX_addr_0A, MUX_addr_0B, MUX_CHAN_0A, MUX_addr_0B);
   debugln("LOADING CARD2");
-  CARD2 = I2C_MUX_CARD(0x22, 0x23, MUX_CHAN_3, MUX_CHAN_4);
+  CARD_M1 = I2C_MUX_CARD(MUX_addr_1A, MUX_addr_1B, MUX_CHAN_1A, MUX_addr_1B);
   // delay(2000);
   debugln("LOADING CARD3");
-  CARD3 = I2C_MUX_CARD(0x24, 0x25, MUX_CHAN_5, MUX_CHAN_6);
+  CARD_M2 = I2C_MUX_CARD(MUX_addr_2A, MUX_addr_2B, MUX_CHAN_2A, MUX_addr_2B);
   debugln("LOADING CARD4");
-  CARD4 = I2C_MUX_CARD(0x26, 0x27, MUX_CHAN_7, MUX_CHAN_8);
+  CARD_M3 = I2C_MUX_CARD(MUX_addr_3A, MUX_addr_3B, MUX_CHAN_3A, MUX_addr_3B);
   debugln("SYSTEM LOADED");
 }
 
 bool I2C_MUX_SYSYEM::read(unsigned int PIN) {
-  if (PIN <= 255) { return (CARD1.read(PIN)); }
+  if (PIN <= 255) { return (CARD_M0.read(PIN)); }
   PIN -= 256;
   if (PIN <= 255) { return (CARD2.read(PIN)); }
   PIN -= 256;
@@ -177,8 +201,9 @@ bool I2C_MUX_SYSYEM::read(unsigned int PIN) {
   PIN -= 256;
   if (PIN <= 255) { return (CARD4.read(PIN)); }
 }
+
 void I2C_MUX_SYSYEM::write(int PIN, bool state) {
-  if (PIN <= 255) { return (CARD1.write(PIN, state)); }
+  if (PIN <= 255) { return (CARD_M0.write(PIN, state)); }
   PIN -= 256;
   if (PIN <= 255) { return (CARD2.write(PIN, state)); }
   PIN -= 256;
@@ -186,8 +211,9 @@ void I2C_MUX_SYSYEM::write(int PIN, bool state) {
   PIN -= 256;
   if (PIN <= 255) { return (CARD4.write(PIN, state)); }
 }
+
 void I2C_MUX_SYSYEM::restore_pin(int PIN) {
-  if (PIN <= 255) { return (CARD1.restore_pin()); }
+  if (PIN <= 255) { return (CARD_M0.restore_pin()); }
   PIN -= 256;
   if (PIN <= 255) { return (CARD2.restore_pin()); }
   PIN -= 256;
@@ -195,12 +221,14 @@ void I2C_MUX_SYSYEM::restore_pin(int PIN) {
   PIN -= 256;
   if (PIN <= 255) { return (CARD4.restore_pin()); }
 }
+
 bool I2C_MUX_SYSYEM::is_conected(int PIN_A, int PIN_B) {
   write(PIN_A, LOW);
   bool buff = read(PIN_B);
   restore_pin(PIN_A);
   return (!buff);
 }
+
 int I2C_MUX_SYSYEM::detect_signal(int PIN, int detection_index) {
   int count = 1;
   for (int i = 0; i < 1024; i++) {
@@ -210,6 +238,7 @@ int I2C_MUX_SYSYEM::detect_signal(int PIN, int detection_index) {
   }
   return (-1);
 }
+
 bool I2C_MUX_SYSYEM::check_module(void) {
   debugln("check_module");
   //  debugln("Revisando la Tarjeta 1");
