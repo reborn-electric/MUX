@@ -29,6 +29,7 @@
 #define debugHEX(x) Serial.print(x,HEX)
 #define debugln(x) Serial.println(x)
 
+
 #define DEBUG_COM Serial.begin(115500)
 #else
 #define debug(x)
@@ -80,8 +81,8 @@ class I2C_MUX_CARD{
   bool OPERATIVE;
   PCF8574 IO_EXPANDER_A;
   PCF8574 IO_EXPANDER_B;
-  int CHAN_A;
-  int CHAN_B;
+  unsigned int CHAN_A;
+  unsigned int CHAN_B;
   I2C_MUX_CARD();
   I2C_MUX_CARD(int ADDR_A, int ADDR_B, int PIN_A, int PIN_B);
   void write(int PIN, bool state);
@@ -98,9 +99,9 @@ class I2C_MUX_SYSYEM {
 
   public:
   I2C_MUX_CARD CARD_M0; //M0
-  I2C_MUX_CARD CARD2; //M1
-  I2C_MUX_CARD CARD3; //M2
-  I2C_MUX_CARD CARD4; //M3
+  I2C_MUX_CARD CARD_M1; //M1
+  I2C_MUX_CARD CARD_M2; //M2
+  I2C_MUX_CARD CARD_M3; //M3
 
   I2C_MUX_SYSYEM();
   bool read(unsigned int PIN);
