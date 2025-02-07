@@ -10,47 +10,47 @@
 PCF8574::PCF8574(void) {}
 void PCF8574::set_address(int ADDR) {
 
-  debugln("set_address (1)");
+  ////debugln("set_address (1)");
   address = ADDR;
-  // debugln("set_address done!");
+  ////debugln("set_address done!");
 }
 
 int PCF8574::begin(void) {
-  debugln("begin parte io exp A/B");
+  ////debugln("begin parte io exp A/B");
   Wire.beginTransmission(address);
   int error = Wire.endTransmission();
-  debugln(error);
+  //debugln(error);
   return error;
 }
 
 int PCF8574::write(int myByte) {
  int result =4;
  do{
-  debugln("<ESTAMOS ADENTRO DEL DO>");
+  ////debugln("<ESTAMOS ADENTRO DEL DO>");
   Wire.beginTransmission(address);
-  debugln("--> ejecuta: wire.beginTransm");
-  debugln("--> esto retorna <address>:");
-  debugln(address);
+  ////debugln("--> ejecuta: wire.beginTransm");
+  ////debugln("--> esto retorna <address>:");
+  ////debugln(address);
   Wire.write(myByte);
-  debugln("--> ejecuta: wire.write(myByte)");
-  debugln("--> esto retorna <myByte>:");
-  debugln(myByte);
-  debugln("--> esto retorna <reg>:");
-  debugln(reg);
+  ////debugln("--> ejecuta: wire.write(myByte)");
+  ////debugln("--> esto retorna <myByte>:");
+  ////debugln(myByte);
+  ////debugln("--> esto retorna <reg>:");
+  ////debugln(reg);
   result = Wire.endTransmission();
-  debugln("--> esto retorna <result>:");
-  debugln(result);
+  ////debugln("--> esto retorna <result>:");
+  ////debugln(result);
  }///
 
 
  while(result != 0); ///esto conghela si end transmission es distinto de 0 
-  //debugln("<ESTAMOS ADENTRO DEL WHILE DEL DO>");
+  ////debugln("<ESTAMOS ADENTRO DEL WHILE DEL DO>");
   reg = myByte;
-  debugln("--> ejecuta: reg = myByte");
-  debugln("--> esto retorna <result>:");
-  debugln(result);
-  debugln("--> esto retorna <reg>:");
-  debugln(reg);
+  ////debugln("--> ejecuta: reg = myByte");
+  ////debugln("--> esto retorna <result>:");
+  ////debugln(result);
+  ////debugln("--> esto retorna <reg>:");
+  ////debugln(reg);
   return result;
 }
 
@@ -99,27 +99,27 @@ int PCF8574::digitalToggle(int pin) {
 I2C_MUX_CARD::I2C_MUX_CARD() {}
 
 I2C_MUX_CARD::I2C_MUX_CARD(int ADDR_A, int ADDR_B, int PIN_A, int PIN_B) {
-  debugln("I2C_MUX_CARD ---> creando addr y chan por placa M");
+  //debugln("I2C_MUX_CARD ---> creando addr y chan por placa M");
   Wire.begin();
-  // debugln("WIRE online");
+  // //debugln("WIRE online");
   IO_EXPANDER_A.set_address(ADDR_A);
-  // debugln("Address  A setted ");
+  // //debugln("Address  A setted ");
   IO_EXPANDER_B.set_address(ADDR_B);
-  // debugln("Address  B setted ");
+  // //debugln("Address  B setted ");
 
-  
-  if (IO_EXPANDER_A.begin() == 0) { 
+  IO_EXPANDER_A.begin();
+  //if (IO_EXPANDER_A.begin() == 0) { 
   //delay(50);
-  debugln("\tEXPANDER A ONLINE ---> lo está reconociendo :)");}
+  //debugln("\tEXPANDER A ONLINE ---> lo está reconociendo :)");}
   //  else {
-  //   debugln("\tEXPANDER A OFFLINE");
+  //   //debugln("\tEXPANDER A OFFLINE");
   // }
-
-  if (IO_EXPANDER_B.begin() == 0){
+  IO_EXPANDER_B.begin();
+  //if (IO_EXPANDER_B.begin() == 0){
     //delay(50);
-    debugln("\tEXPANDER B ONLINE ---> lo está reconociendo :)");}
+    //debugln("\tEXPANDER B ONLINE ---> lo está reconociendo :)");}
   //  else {
-  //   debugln("\tEXPANDER B OFFLINE");
+  //   //debugln("\tEXPANDER B OFFLINE");
   // }
   CHAN_A = PIN_A;
   CHAN_B = PIN_B;
@@ -144,10 +144,10 @@ bool I2C_MUX_CARD::read(int PIN) {
   delay(10);
   digitalWrite(CHAN_B,HIGH);
   pinMode(CHAN_B, INPUT);
-  debugln("<estamos en i2c_mux_card::read>");
-  debug("digitalread del CHAN_B AKA PIN ");
-  debugln(CHAN_B);
-  debugln(digitalRead(CHAN_B));
+  //debugln("<estamos en i2c_mux_card::read>");
+  //debug("digitalread del CHAN_B AKA PIN ");
+  //debugln(CHAN_B);
+  //debugln(digitalRead(CHAN_B));
   return (digitalRead(CHAN_B));
 
 }
@@ -163,23 +163,23 @@ int I2C_MUX_CARD::check_signal(int PIN) {
 bool detected = 0;
 bool correcto = 0;
 
-  debug("Checking PIN 0x");
-  debugHEX(PIN);
+  //debug("Checking PIN 0x");
+  //debugHEX(PIN);
   for (int i = 0; i < 256; i++) {
 
     if (i != PIN && is_conected(PIN, i)) {
         
-        debug(" detected at PIN 0x");
-        debugHEX(i);
-        debugln("");
+        //debug(" detected at PIN 0x");
+        //debugHEX(i);
+        //debugln("");
          return (i);
       
     }
   }
   if (! detected){
-    debug("Checking PIN 0x");
-    debugHEX(PIN);
-    debugln(" not detected");
+    //debug("Checking PIN 0x");
+    //debugHEX(PIN);
+    //debugln(" not detected");
     }
   //
   return (-1);
@@ -187,7 +187,7 @@ bool correcto = 0;
 }
 
 bool I2C_MUX_CARD::check_card(void) {
-  debugln("check_card");
+  //debugln("check_card");
   bool state = true;
   for (int i = 0; i < 256; i++) {
     if (check_signal(i) != i) {
@@ -206,17 +206,17 @@ bool I2C_MUX_CARD::check_card(void) {
 I2C_MUX_SYSYEM::I2C_MUX_SYSYEM() {
 
   // MUX_CHAN_0A ---> CHAN_0A
-  debugln("               ");
-  debugln("LOADING CARD_M0");
+  //debugln("               ");
+  //debugln("LOADING CARD_M0");
   CARD_M0 = I2C_MUX_CARD(MUX_addr_0A, MUX_addr_0B, MUX_CHAN_0A, MUX_CHAN_0B);
-  debugln("LOADING CARD_M1");
+  //debugln("LOADING CARD_M1");
   CARD_M1 = I2C_MUX_CARD(MUX_addr_1A, MUX_addr_1B, MUX_CHAN_1A, MUX_CHAN_1B);
   // delay(2000);
-  debugln("LOADING CARD_M2");
+  //debugln("LOADING CARD_M2");
   CARD_M2 = I2C_MUX_CARD(MUX_addr_2A, MUX_addr_2B, MUX_CHAN_2A, MUX_CHAN_2B);
-  debugln("LOADING CARD_M3");
+  //debugln("LOADING CARD_M3");
   CARD_M3 = I2C_MUX_CARD(MUX_addr_3A, MUX_addr_3B, MUX_CHAN_3A, MUX_CHAN_3B);
-  debugln("SYSTEM LOADED");
+  //debugln("SYSTEM LOADED");
 }
 
 bool I2C_MUX_SYSYEM::read(unsigned int PIN) {
@@ -227,7 +227,7 @@ bool I2C_MUX_SYSYEM::read(unsigned int PIN) {
   if (PIN <= 255) { return (CARD_M2.read(PIN)); }
   PIN -= 256;
   if (PIN <= 255) { return (CARD_M3.read(PIN)); }
-  debugln("no funco tamos hasta loly");
+  //debugln("no funco tamos hasta loly");
 }
 
 void I2C_MUX_SYSYEM::write(int PIN, bool state) {
@@ -251,14 +251,14 @@ void I2C_MUX_SYSYEM::restore_pin(int PIN) {
 }
 
 bool I2C_MUX_SYSYEM::is_conected(int PIN_A, int PIN_B) {
-  debugln("<Estamos en i2c_mux_system::isconected>");
+  ////debugln("<Estamos en i2c_mux_system::isconected>");
   write(PIN_A, LOW);
-  debugln("numero de PIN_A:");
-  debugln(PIN_A);
+  ////debugln("numero de PIN_A:");
+  ////debugln(PIN_A);
   delay(50);
   bool buff = read(PIN_B);
-  debugln("valor de PIN_B:");
-  debugln(buff);
+  ////debugln("valor de PIN_B:");
+  ////debugln(buff);
   restore_pin(PIN_A);
   restore_pin(PIN_B);
   return (!buff);
@@ -274,25 +274,25 @@ int I2C_MUX_SYSYEM::detect_signal(int PIN, int detection_index) {
   return (-1);
 }
 
-bool I2C_MUX_SYSYEM::check_module(void) {
-  debugln("check_module");
-  //  debugln("Revisando la Tarjeta 1");
+//bool I2C_MUX_SYSYEM::check_module(void) {
+  //debugln("check_module");
+  //  //debugln("Revisando la Tarjeta 1");
   // Wire.begin();
   // if (!CARD1.check_card()) {
-  //   debugln("MALA");
+  //   //debugln("MALA");
   //  }
-  // debugln("Revisando la Tarjeta 2");
+  // //debugln("Revisando la Tarjeta 2");
   // if (!CARD_M1.check_card()) {
-  //   debugln("MALA");
+  //   //debugln("MALA");
   // }
-  debugln("Revisando la tarjeta 3");
-  if (!CARD_M2.check_card()) {
-    debugln("MALA");
-  }
-  // debugln("Revisando la tarjeta 4");
+  //debugln("Revisando la tarjeta 3");
+  //if (!CARD_M2.check_card()) {
+    //debugln("MALA");
+  
+  // //debugln("Revisando la tarjeta 4");
   // if (!CARD_M3.check_card()) {
-  //   debugln("MALA");
+  //   //debugln("MALA");
   // }
-  return (true);
-  Wire.end();
-}
+  //return (true);
+  //Wire.end();
+//}
